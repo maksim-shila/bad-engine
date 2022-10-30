@@ -15,3 +15,8 @@ export * from "./scene/camera/Camera";
 
 export * from "./utils/FrameTimer";
 export * from "./utils/SpriteDimension";
+
+export * from "./input/Inputs";
+export * from "./input/KeyAction";
+export * from "./input/Input";
+export * from "./input/gamepad/XBoxGamepad";
