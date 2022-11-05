@@ -1,6 +1,6 @@
 {
   "name": "bad-engine",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Game engine",
   "main": "./lib/index.js",
   "scripts": {
