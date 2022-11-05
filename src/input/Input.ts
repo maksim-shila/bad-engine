@@ -15,7 +15,6 @@ export abstract class Input {
     }
 
     public keyDown(key: KeyAction | string): boolean {
-        console.log(key);
         return this.getCodes(key).some(code =>
             this._pressed.includes(code) &&
             !this._locked.includes(code));
