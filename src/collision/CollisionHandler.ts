@@ -67,14 +67,6 @@ export class CollisionHandler {
                 left.parent.onCollisionExit && left.parent.onCollisionExit(existing);
                 right.parent.onCollisionExit && right.parent.onCollisionExit(existing);
                 return null;
-            }
-            const newCollision = new Collision(left, right);
-            if (existing.direction !== newCollision.direction) {
-                left.parent.onCollisionExit && left.parent.onCollisionExit(existing);
-                left.parent.onCollisionEnter && left.parent.onCollisionEnter(newCollision);
-                right.parent.onCollisionExit && right.parent.onCollisionExit(existing);
-                right.parent.onCollisionEnter && right.parent.onCollisionEnter(newCollision);
-                return newCollision;
             } else {
                 left.parent.onCollision && left.parent.onCollision(existing);
                 right.parent.onCollision && right.parent.onCollision(existing);
@@ -121,6 +113,10 @@ export class CollisionHandler {
                 sprite.vy = 0;
             } else {
                 sprite.rigidBody!.onGround = false;
+            }
+
+            if (directions.some(d => d === "top")) {
+                sprite.vy = 0;
             }
 
             sprite.onObstacleCollisions && sprite.onObstacleCollisions(directions);
