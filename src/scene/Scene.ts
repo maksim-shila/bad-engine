@@ -1,4 +1,4 @@
-import { CollisionHandler, FrameTimer, GameObject, GameObjectContainer, Camera } from "..";
+import { CollisionHandler, Frame, GameObject, GameObjectContainer, Camera } from "..";
 
 export abstract class Scene {
 
@@ -71,7 +71,7 @@ export abstract class Scene {
         this._containers.push(container);
     }
 
-    public update(frameTimer: FrameTimer): void {
+    public update(frameTimer: Frame): void {
         this._containers.forEach(container => container.update(frameTimer));
         this._objects.forEach(object => object.update(frameTimer));
         this._colliders.update();
