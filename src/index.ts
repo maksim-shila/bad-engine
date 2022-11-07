@@ -1,4 +1,5 @@
 export * from "./Global";
+export * from "./GameCycle";
 
 export * from "./collision/Collider";
 export * from "./collision/Collision";
@@ -13,7 +14,7 @@ export * from "./game-object/RigidBody";
 export * from "./scene/Scene";
 export * from "./scene/camera/Camera";
 
-export * from "./utils/FrameTimer";
+export * from "./utils/Frame";
 export * from "./utils/SpriteDimension";
 
 export * from "./input/Inputs";

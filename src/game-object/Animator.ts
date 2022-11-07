@@ -1,4 +1,4 @@
-import { FrameTimer } from "../utils/FrameTimer";
+import { Frame } from "../utils/Frame";
 
 export class Animator {
 
@@ -35,7 +35,7 @@ export class Animator {
         this._frameInterval = 1000 / this._fps;
     }
 
-    public update(frameTimer: FrameTimer): void {
+    public update(frame: Frame): void {
         if (this.animation) {
             if (this._currentFrameInterval > this._frameInterval) {
                 const nextFrame = this.animation.nextFrame;
@@ -43,7 +43,7 @@ export class Animator {
                 this._frameY = nextFrame.y;
                 this._currentFrameInterval = 0;
             } else {
-                this._currentFrameInterval += frameTimer.deltaTime;
+                this._currentFrameInterval += frame.deltaTime;
             }
         }
     }
@@ -63,13 +63,13 @@ export class Animator {
     }
 }
 
-interface Frame {
+interface AnimationFrame {
     x: number,
     y: number
 }
 
 export interface Animation {
-    nextFrame: Frame,
+    nextFrame: AnimationFrame,
     isMaxFrame: boolean,
     reset(): void;
 }
@@ -83,7 +83,7 @@ export class AnimationRow implements Animation {
         private readonly _framesXCount: number
     ) { }
 
-    public get nextFrame(): Frame {
+    public get nextFrame(): AnimationFrame {
         this._frameX = ++this._frameX % this._framesXCount;
         return {
             x: this._frameX,

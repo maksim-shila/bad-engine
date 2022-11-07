@@ -1,4 +1,4 @@
-import { Animator, Collider, Collision, CollisionDirection, FrameTimer, Global, Hitbox, RigidBody, Scene } from "..";
+import { Animator, Collider, Collision, CollisionDirection, Frame, Global, Hitbox, RigidBody, Scene } from "..";
 
 type Direction = "right" | "left" | "top" | "bottom";
 
@@ -104,8 +104,8 @@ export abstract class GameObject {
         this._destroyActions.forEach(action => action(this));
     }
 
-    public update(frameTimer: FrameTimer): void {
-        this._animator?.update(frameTimer);
+    public update(frame: Frame): void {
+        this._animator?.update(frame);
     }
 
     public draw(context: CanvasRenderingContext2D): void {

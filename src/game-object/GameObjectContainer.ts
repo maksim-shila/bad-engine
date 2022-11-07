@@ -1,4 +1,4 @@
-import { FrameTimer, Scene } from "..";
+import { Frame, Scene } from "..";
 
 export abstract class GameObjectContainer {
 
@@ -7,5 +7,5 @@ export abstract class GameObjectContainer {
     constructor(protected readonly scene: Scene) { }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public update(_: FrameTimer): void { }
+    public update(_: Frame): void { }
 }
