@@ -7,9 +7,6 @@ export abstract class Scene {
     private _colliders = new CollisionHandler();
     private _camera: Camera;
 
-    public vx = 0;
-    public vx_default = 0;
-
     constructor(
         public readonly width: number,
         public readonly height: number

@@ -10,7 +10,8 @@ class DeadZone {
 }
 
 export enum FollowStrategy {
-    Centered
+    Centered,
+    Static
 }
 
 export class Camera {
@@ -20,6 +21,9 @@ export class Camera {
     private _dy = 0;
     private _lastX = 0;
     private _lastY = 0;
+
+    public vx = 0;
+    public vy = 0;
 
     public deadZone: DeadZone = new DeadZone();
     public followStrategy: FollowStrategy = FollowStrategy.Centered;
@@ -65,10 +69,18 @@ export class Camera {
                 this.x = this._followed.cx - this.width * 0.5;
                 this.y = this._followed.cy - this.height * 0.5;
                 break;
+            case FollowStrategy.Static:
+                this.x += this.vx;
+                this.y += this.vy;
+                this.deadZone.y = this.y;
+                this.deadZone.ry = this.ry;
+                this.deadZone.x = this.x;
+                this.deadZone.rx = this.rx;
+                break;
         }
 
         if (this.x < this.deadZone.x) this.x = this.deadZone.x;
-        if (this.rx > this.deadZone.rx) this.x = this.deadZone.x - this.width;
+        if (this.rx > this.deadZone.rx) this.x = this.deadZone.rx - this.width;
         if (this.y < this.deadZone.y) this.y = this.deadZone.y;
         if (this.ry > this.deadZone.ry) this.y = this.deadZone.ry - this.height;
 
