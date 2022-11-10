@@ -2,6 +2,7 @@ import { GameObject } from "..";
 
 export interface Collider {
     parent: GameObject;
+    mirror: Collider;
     x: number;
     y: number;
     rx: number;
@@ -13,6 +14,8 @@ export interface Collider {
 }
 
 export class RectCollider implements Collider {
+    private _mirror: Collider | null = null;
+
     constructor(
         public readonly parent: GameObject,
         private offsetX = 0,
@@ -20,6 +23,20 @@ export class RectCollider implements Collider {
         private offsetWidth = 0,
         private offsetHeight = 0
     ) { }
+
+    public get mirror(): Collider {
+        if (this._mirror === null) {
+            const collider = new RectCollider(
+                this.parent,
+                this.parent.width - this.width - this.offsetX,
+                this.offsetY,
+                this.offsetWidth,
+                this.offsetHeight);
+            collider._mirror = this;
+            this._mirror = collider;
+        }
+        return this._mirror;
+    }
 
     public get x(): number {
         return this.parent.x + this.offsetX;

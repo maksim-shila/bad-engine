@@ -19,12 +19,25 @@ class SingleHitbox {
 export class Hitbox {
 
     private readonly _hitboxes: SingleHitbox[] = [];
+    private _mirror: Hitbox | null = null;
 
-    constructor(gameObject?: GameObject) {
-        const collider = gameObject?.collider;
+    constructor(private readonly _gameObject?: GameObject) {
+        const collider = this._gameObject?.collider;
         if (collider) {
             this.add(collider);
         }
+    }
+
+    public get mirror(): Hitbox {
+        if (this._mirror === null) {
+            const hitbox = new Hitbox(this._gameObject);
+            hitbox._mirror = this;
+            this._hitboxes.forEach(child => {
+                hitbox.add(child.collider.mirror, child.name);
+            });
+            this._mirror = hitbox;
+        }
+        return this._mirror;
     }
 
     public add(collider: Collider, name = "main") {
