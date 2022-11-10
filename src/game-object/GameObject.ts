@@ -4,8 +4,6 @@ type Direction = "right" | "left" | "top" | "bottom";
 
 export abstract class GameObject {
 
-    public readonly GlobalType = "object";
-
     public collider: Collider | null = null;
     public rigidBody: RigidBody | null = null;
     public animator: Animator | null = null;
@@ -19,6 +17,8 @@ export abstract class GameObject {
     public vx = 0;
     public vy = 0;
     public name = "unknown";
+
+    public order = 0;
 
     constructor(
         public readonly type: string,

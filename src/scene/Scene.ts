@@ -1,9 +1,8 @@
-import { CollisionHandler, Frame, GameObject, GameObjectContainer, Camera } from "..";
+import { CollisionHandler, Frame, GameObject, Camera } from "..";
 
 export abstract class Scene {
 
     private _objects: GameObject[] = [];
-    private _containers: GameObjectContainer[] = [];
     private _colliders = new CollisionHandler();
     private _camera: Camera;
 
@@ -38,18 +37,10 @@ export abstract class Scene {
         return this._objects.filter(o => o.type === "obstacle");
     }
 
-    public add(object: GameObject | GameObjectContainer): void {
-        switch (object.GlobalType) {
-            case "object":
-                this.addObject(object);
-                break;
-            case "container":
-                this.addContainer(object);
-                break;
+    public add(object: GameObject, order?: number): void {
+        if (order) {
+            object.order = order;
         }
-    }
-
-    public addObject(object: GameObject): void {
         this._objects.push(object);
         object.onDestroy(self => this._objects = this._objects.filter(o => o !== self));
         switch (object.type) {
@@ -64,18 +55,14 @@ export abstract class Scene {
         }
     }
 
-    public addContainer(container: GameObjectContainer): void {
-        this._containers.push(container);
-    }
-
     public update(frameTimer: Frame): void {
-        this._containers.forEach(container => container.update(frameTimer));
         this._objects.forEach(object => object.update(frameTimer));
         this._colliders.update();
         this._camera.update();
     }
 
     public draw(context: CanvasRenderingContext2D): void {
+        this._objects.sort((o1, o2) => o1.order > o2.order ? 1 : (o1.order < o2.order ? -1 : 0));
         this._objects.forEach(object => object.draw(context));
     }
 
