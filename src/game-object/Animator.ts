@@ -5,6 +5,7 @@ export class Animator {
     private readonly _image: CanvasImageSource;
     private readonly _sw: number;
     private readonly _sh: number;
+    private readonly _imageWidth: number;
 
     private _frameX = 0;
     private _frameY = 0;
@@ -14,14 +15,24 @@ export class Animator {
 
     public animation: Animation | null = null;
 
+    /**
+     * @param imageId - id of <img> element passed to document.getElementById(imageId)
+     * @param _width - target width of image
+     * @param _height - target height of image
+     * @param sw - source image width
+     * @param sh - source image height
+     * @param _mirrored - frames taken from right to left if true
+     */
     constructor(
         imageId: string,
         private readonly _width: number,
         private readonly _height: number,
         sw?: number,
         sh?: number,
+        private readonly _mirrored = false
     ) {
         this._image = document.getElementById(imageId) as CanvasImageSource;
+        this._imageWidth = this._image.width as number;
         this._sw = sw ?? this._width;
         this._sh = sh ?? this._height;
     }
@@ -49,17 +60,11 @@ export class Animator {
     }
 
     public draw(context: CanvasRenderingContext2D, x: number, y: number): void {
-        context.drawImage(
-            this._image,
-            this._frameX * this._sw,
-            this._frameY * this._sh,
-            this._sw,
-            this._sh,
-            x,
-            y,
-            this._width,
-            this._height
-        );
+        const sx = this._mirrored ?
+            this._imageWidth - (this._frameX + 1) * this._sw :
+            this._frameX * this._sw;
+        const sy = this._frameY * this._sh;
+        context.drawImage(this._image, sx, sy, this._sw, this._sh, x, y, this._width, this._height);
     }
 }
 

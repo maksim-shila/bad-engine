@@ -6,10 +6,10 @@ export abstract class GameObject {
 
     public readonly GlobalType = "object";
 
-    private _collider: Collider | null = null;
-    private _rigidBody: RigidBody | null = null;
-    private _animator: Animator | null = null;
-    private _hitbox: Hitbox | null = null;
+    public collider: Collider | null = null;
+    public rigidBody: RigidBody | null = null;
+    public animator: Animator | null = null;
+    public hitbox: Hitbox | null = null;
 
     private _destroyActions: ((self: GameObject) => unknown)[] = [];
     private _destroyed = false;
@@ -26,38 +26,6 @@ export abstract class GameObject {
         public width = 0,
         public height = 0
     ) { }
-
-    public get hitbox(): Hitbox | null {
-        return this._hitbox;
-    }
-
-    public set hitbox(value: Hitbox | null) {
-        this._hitbox = value;
-    }
-
-    public get collider(): Collider | null {
-        return this._collider;
-    }
-
-    protected set collider(value: Collider | null) {
-        this._collider = value;
-    }
-
-    public get rigidBody(): RigidBody | null {
-        return this._rigidBody;
-    }
-
-    protected set rigidBody(value: RigidBody | null) {
-        this._rigidBody = value;
-    }
-
-    public get animator(): Animator | null {
-        return this._animator;
-    }
-
-    protected set animator(value: Animator | null) {
-        this._animator = value;
-    }
 
     public get onGround(): boolean {
         return this.rigidBody?.onGround ?? false;
@@ -105,14 +73,14 @@ export abstract class GameObject {
     }
 
     public update(frame: Frame): void {
-        this._animator?.update(frame);
+        this.animator?.update(frame);
     }
 
     public draw(context: CanvasRenderingContext2D): void {
-        this._animator?.draw(context, this.drawX, this.drawY);
+        this.animator?.draw(context, this.drawX, this.drawY);
         if (Global.debug) {
-            this._collider?.draw(context);
-            this._hitbox?.draw(context);
+            this.collider?.draw(context);
+            this.hitbox?.draw(context);
         }
     }
 
