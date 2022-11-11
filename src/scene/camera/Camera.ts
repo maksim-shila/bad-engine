@@ -1,4 +1,5 @@
 import { GameObject } from "../../game-object/GameObject";
+import { BadMath } from "../../utils/BadMath";
 
 class DeadZone {
     constructor(
@@ -23,6 +24,7 @@ export class Camera {
     private _lastY = 0;
 
     public vx = 0;
+    public vxDelta = 0.5;
     public vy = 0;
 
     public deadZone: DeadZone = new DeadZone();
@@ -66,12 +68,9 @@ export class Camera {
 
         switch (this.followStrategy) {
             case FollowStrategy.Centered:
-                this.x = this._followed.cx - this.width * 0.5;
-                this.y = this._followed.cy - this.height * 0.5;
+                this.centerX();
                 break;
             case FollowStrategy.Static:
-                this.x += this.vx;
-                this.y += this.vy;
                 this.deadZone.y = this.y;
                 this.deadZone.ry = this.ry;
                 this.deadZone.x = this.x;
@@ -79,8 +78,17 @@ export class Camera {
                 break;
         }
 
-        if (this.x < this.deadZone.x) this.x = this.deadZone.x;
-        if (this.rx > this.deadZone.rx) this.x = this.deadZone.rx - this.width;
+        this.x += this.vx;
+        this.y += this.vy;
+
+        if (this.x < this.deadZone.x) {
+            this.x = this.deadZone.x;
+            this.vx = 0;
+        }
+        if (this.rx > this.deadZone.rx) {
+            this.x = this.deadZone.rx - this.width;
+            this.vx = 0;
+        }
         if (this.y < this.deadZone.y) this.y = this.deadZone.y;
         if (this.ry > this.deadZone.ry) this.y = this.deadZone.ry - this.height;
 
@@ -92,5 +100,34 @@ export class Camera {
 
     public follow(gameObject: GameObject): void {
         this._followed = gameObject;
+        if (this.followStrategy === FollowStrategy.Centered) {
+            this.x = this._followed.cx - this.width * 0.5;
+            this.y = this._followed.cy - this.height * 0.5;
+        }
+    }
+
+    private centerX(): void {
+        if (this._followed === null) {
+            return;
+        }
+        const centerOffset = Math.floor(this._followed.cx - this.cx);
+        if ((this.x === this.deadZone.x && centerOffset < 0) || (this.rx === this.deadZone.rx && centerOffset > 0)) {
+            this.vx = 0;
+            return;
+        }
+        if (this._followed.vx === 0) {
+            const vx = this.vx * 0.8 + centerOffset * 0.01
+            this.vx = BadMath.round(vx, 2);
+        } else {
+            this.vx += this._followed.vx * 0.05;
+            if (Math.abs(this.vx) > Math.abs(this._followed.vx)) {
+                const vx = this._followed.vx + centerOffset * 0.01
+                this.vx = BadMath.round(vx, 2);
+            }
+        }
+        if (Math.abs(this.vx) <= 0.01) {
+            this.vx = 0;
+            this.x = this._followed.cx - this.width * 0.5;
+        }
     }
 }
